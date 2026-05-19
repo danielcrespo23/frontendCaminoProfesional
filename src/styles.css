@@ -465,16 +465,15 @@ html {
 .puestostrabajoyformulario {
   display: flex;
   gap: 40px;
-  margin: 60px auto;
-  max-width: 1400px;
+  margin: 60px 0;
   align-items: flex-start;
-  padding: 0 20px;
+  padding: 0 40px;
 }
 
 /* === SECCIÓN TRABAJOS === */
 .trabajos {
   flex: 2;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #004374 0%, #002b49 100%);
   padding: 50px;
   border-radius: 20px;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
@@ -520,7 +519,7 @@ html {
 }
 
 .trabajo-icon {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #004374 0%, #005a9e 100%);
   width: 70px;
   height: 70px;
   border-radius: 14px;
@@ -530,15 +529,15 @@ html {
   font-size: 2rem;
   color: white;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 67, 116, 0.4);
 }
 
 .trabajo-icon.redes {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #f7a500 0%, #e08900 100%);
 }
 
 .trabajo-icon.desarrollo {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #0070b8 0%, #00a8e8 100%);
 }
 
 .trabajo-icon.seguridad {
@@ -634,7 +633,7 @@ html {
 .stat-number {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffeaa7;
+  color: #f7a500;
   margin-bottom: 8px;
 }
 
@@ -645,7 +644,7 @@ html {
 
 /* === FORMULARIO === */
 .formulario {
-  flex: 1;
+  flex: 0 0 420px;
   background: white;
   padding: 40px;
   border-radius: 20px;
@@ -663,7 +662,7 @@ html {
 
 .formulario-header i {
   font-size: 3rem;
-  color: #667eea;
+  color: #f7a500;
   margin-bottom: 15px;
 }
 
@@ -702,8 +701,8 @@ html {
 
 .formulario input:focus,
 .formulario select:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #004374;
+  box-shadow: 0 0 0 3px rgba(0, 67, 116, 0.1);
 }
 
 .formulario select {
@@ -718,13 +717,13 @@ html {
   padding: 16px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #004374 0%, #002b49 100%);
   color: white;
   font-weight: 700;
   font-size: 1.05rem;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 67, 116, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -733,7 +732,7 @@ html {
 
 .btn-enviar:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 8px 20px rgba(0, 67, 116, 0.5);
 }
 
 .btn-enviar:active {
@@ -764,9 +763,12 @@ html {
 @media (max-width: 1024px) {
   .puestostrabajoyformulario {
     flex-direction: column;
+    padding: 0 20px;
   }
 
   .formulario {
+    flex: none;
+    width: 100%;
     position: relative;
     top: 0;
     max-height: none;
