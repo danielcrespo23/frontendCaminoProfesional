@@ -1,23 +1,36 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Header } from '../../components/header/header';
 import { Footer } from '../../components/footer/footer';
 
 @Component({
   selector: 'app-daw',
-  imports: [Header, Footer],
+  standalone: true,
+  imports: [CommonModule, RouterModule, Header, Footer],
   templateUrl: './daw.html',
-  styleUrl: './daw.css'
+  styleUrls: ['./daw.css']
 })
 export class Daw {
-  abiertos = signal<Set<string>>(new Set());
+  cursoActivo = 1;
+  moduloAbierto: string | null = null;
+  faqAbierto: number | null = null;
 
-  toggle(id: string) {
-    const s = new Set(this.abiertos());
-    s.has(id) ? s.delete(id) : s.add(id);
-    this.abiertos.set(s);
+  toggleModulo(id: string) {
+    this.moduloAbierto = this.moduloAbierto === id ? null : id;
   }
 
-  isOpen(id: string) {
-    return this.abiertos().has(id);
+  toggleFAQ(id: number) {
+    this.faqAbierto = this.faqAbierto === id ? null : id;
+  }
+
+  scrollToFormulario() {
+    // Redirigir a home con anchor
+    window.location.href = '/#puestostrabajoyformulario';
+  }
+
+  descargarPDF() {
+    // Implementar descarga de PDF
+    alert('Funcionalidad de descarga en desarrollo');
   }
 }
