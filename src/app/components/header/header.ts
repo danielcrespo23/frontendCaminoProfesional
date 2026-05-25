@@ -15,4 +15,9 @@ export class Header {
     document.getElementById('puestostrabajoyformulario')
       ?.scrollIntoView({ behavior: 'smooth' });
   }
+
+  cerrarSesion() {
+    this.auth.logout();
+    window.location.href = '/';
+  }
 }

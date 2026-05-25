@@ -48,7 +48,7 @@
     <div class="actions">
       <div class="search-box">
         @if (auth.esAdmin() || auth.usuario()) {
-          <a (click)="auth.logout()" style="color:red; cursor:pointer;">Cerrar Sesión</a>
+          <a (click)="cerrarSesion()" style="color:red; cursor:pointer;">Cerrar Sesión</a>
         } @else {
           <a routerLink="/login" style="color:blue; font-weight:bold;">Área Privada</a>
         }

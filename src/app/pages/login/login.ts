@@ -30,7 +30,7 @@ export class LoginComponent {
       next: (response) => {
         this.enviando = false;
         if (response.success) {
-          this.router.navigate(['/']);
+          window.location.href = '/';
         } else {
           this.mensaje = '❌ ' + response.message;
         }

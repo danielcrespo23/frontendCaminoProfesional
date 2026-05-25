@@ -7,6 +7,7 @@ import { Auth, Usuario } from '../../services/auth';
 import { Header } from '../../components/header/header';
 import { Footer } from '../../components/footer/footer';
 import { Carrusel } from '../../components/carrusel/carrusel';
+import { Comentarios } from '../../components/comentarios/comentarios';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ import { Carrusel } from '../../components/carrusel/carrusel';
     FormsModule,
     Header,
     Footer,
-    Carrusel
+    Carrusel,
+    Comentarios
   ],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
