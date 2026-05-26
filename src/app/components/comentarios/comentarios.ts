@@ -17,7 +17,7 @@ export class Comentarios implements OnInit {
   isLoggedIn: boolean = false;
   nombreUsuario: string = '';
 
-  // ← Apunta al backend PHP en XAMPP
+  // 👉 Apunta al backend PHP en XAMPP
   private apiUrl = 'http://localhost/backend/api';
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -45,7 +45,8 @@ export class Comentarios implements OnInit {
   }
 
   cargarComentarios(): void {
-    this.http.get<any[]>(`${this.apiUrl}/get_comentarios.php`, { withCredentials: true })
+    const urlSinCache = `${this.apiUrl}/get_comentarios.php?t=${new Date().getTime()}`;
+    this.http.get<any[]>(urlSinCache, { withCredentials: true })
       .subscribe({
         next: (data) => {
           this.comentarios = data;
@@ -54,6 +55,22 @@ export class Comentarios implements OnInit {
           console.error('Error al cargar comentarios:', err);
         }
       });
+  }
+
+  borrarComentario(id: any): void {
+    if (confirm('¿Estás seguro de que quieres borrar este comentario?')) {
+      this.http.delete(`${this.apiUrl}/borrar_comentario.php?id=${id}`, { withCredentials: true })
+        .subscribe({
+          next: (respuesta: any) => {
+            console.log('Comentario borrado:', respuesta);
+            this.cargarComentarios();
+          },
+          error: (err) => {
+            console.error('Error al borrar:', err);
+            alert('Hubo un error al borrar el comentario.');
+          }
+        });
+    }
   }
 
   enviarComentario(): void {
@@ -65,7 +82,6 @@ export class Comentarios implements OnInit {
       .subscribe({
         next: (res) => {
           if (res.success) {
-            // 🔥 MODO PRO: añadir el comentario a la lista visual sin recargar la página
             this.comentarios.unshift({
               NOMBRE: this.nombreUsuario,
               texto_comentario: this.nuevoComentario,

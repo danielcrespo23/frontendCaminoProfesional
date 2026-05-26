@@ -32,8 +32,8 @@ interface SessionResponse {
 
 @Injectable({ providedIn: 'root' })
 export class Auth {
-private apiUrl = 'http://localhost/backend/api';
-// ← Aquí apunta al backend
+  private apiUrl = 'http://localhost/backend/api';
+  // ← Aquí apunta al backend
 
   // Signals para reactividad
   usuario = signal<Usuario | null>(null);
@@ -52,20 +52,19 @@ private apiUrl = 'http://localhost/backend/api';
   }
 
   // Verificar sesión al iniciar la app
-  // Verificar sesión al iniciar la app
-checkSession(): void {
-  this.http.get<SessionResponse>(`${this.apiUrl}/check-session.php`, { withCredentials: true })
-    .pipe(
-      catchError(() => of({ authenticated: false } as SessionResponse))
-    )
-    .subscribe(response => {
-      if (response.authenticated && response.user) {
-        this.setUserData(response.user);
-      } else {
-        this.clearUserData();
-      }
-    });
-}
+  checkSession(): void {
+    this.http.get<SessionResponse>(`${this.apiUrl}/check-session.php`, { withCredentials: true })
+      .pipe(
+        catchError(() => of({ authenticated: false } as SessionResponse))
+      )
+      .subscribe(response => {
+        if (response.authenticated && response.user) {
+          this.setUserData(response.user);
+        } else {
+          this.clearUserData();
+        }
+      });
+  }
 
   // Login
   login(email: string, clave: string): Observable<LoginResponse> {
@@ -75,17 +74,12 @@ checkSession(): void {
       { withCredentials: true }
     ).pipe(
       tap(response => {
+        // Solo hacemos cosas aquí si es un éxito real (200 OK)
         if (response.success && response.user) {
           this.setUserData(response.user);
         }
-      }),
-      catchError(error => {
-        console.error('Error en login:', error);
-        return of({ 
-          success: false, 
-          message: error.error?.message || 'Error al iniciar sesión' 
-        });
       })
+      // Eliminamos el catchError para que el error 401 llegue tal cual al componente
     );
   }
 
@@ -105,9 +99,9 @@ checkSession(): void {
     ).pipe(
       catchError(error => {
         console.error('Error en registro:', error);
-        return of({ 
-          success: false, 
-          message: error.error?.message || 'Error al registrar usuario' 
+        return of({
+          success: false,
+          message: error.error?.message || 'Error al registrar usuario'
         });
       })
     );
@@ -121,7 +115,8 @@ checkSession(): void {
       )
       .subscribe(() => {
         this.clearUserData();
-        this.router.navigate(['/']);
+        // 🔥 CAMBIAMOS EL ROUTER POR LA RECARGA COMPLETA PARA EVITAR EL BUG DE LOS COMENTARIOS
+        window.location.href = '/';
       });
   }
 

@@ -16,8 +16,8 @@ export class Header {
       ?.scrollIntoView({ behavior: 'smooth' });
   }
 
+  // 🔥 Nueva función para controlar el cierre de sesión
   cerrarSesion() {
-    this.auth.logout();
-    window.location.href = '/';
+    this.auth.logout(); // Ahora solo llama al servicio, y el servicio hará la recarga
   }
 }

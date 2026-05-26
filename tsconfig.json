@@ -27,5 +27,11 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "frontend",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
 }
