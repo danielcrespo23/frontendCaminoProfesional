@@ -124,6 +124,119 @@ export class Home {
     });
   }
 
+  esSuperAdmin(): boolean {
+    return this.auth.esSuperAdmin();
+  }
+
+  hacerAdmin(email: string, nombre: string) {
+    Swal.fire({
+      title: '¿Dar permisos de Admin?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#2ecc71',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, hacer Admin',
+      cancelButtonText: 'Cancelar'
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.http.post('http://localhost/backend/api/hacer_admin.php', { email }, { withCredentials: true })
+          .subscribe({
+            next: (res: any) => {
+              if (res.success) {
+                Swal.fire('¡Actualizado!', `${nombre} ahora es administrador.`, 'success');
+                this.cargarUsuarios();
+              }
+            },
+            error: (err) => {
+              console.error('Error al hacer admin:', err);
+              Swal.fire('Error', 'No se pudo actualizar el usuario.', 'error');
+            }
+          });
+      }
+    });
+  }
+
+  quitarAdmin(email: string, nombre: string) {
+    Swal.fire({
+      title: '¿Quitar permisos de Admin?',
+      text: `Vas a degradar a ${nombre} a usuario normal.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#f39c12',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, quitar permisos',
+      cancelButtonText: 'Cancelar'
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.http.post('http://localhost/backend/api/quitar_admin.php', { email }, { withCredentials: true })
+          .subscribe({
+            next: (res: any) => {
+              if (res.success) {
+                Swal.fire('¡Hecho!', `${nombre} ya no es administrador.`, 'success');
+                this.cargarUsuarios();
+              }
+            },
+            error: (err) => {
+              console.error('Error al quitar admin:', err);
+              Swal.fire('Error', 'No se pudo actualizar el usuario.', 'error');
+            }
+          });
+      }
+    });
+  }
+
+  hacerSuperAdmin(email: string, nombre: string) {
+    Swal.fire({
+      title: '¿Ascender a Super Admin?',
+      text: `${nombre} podrá gestionar a otros administradores.`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#2e9fff',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, ascender',
+      cancelButtonText: 'Cancelar'
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.http.post('http://localhost/backend/api/hacer_super_admin.php', { email }, { withCredentials: true })
+          .subscribe({
+            next: (res: any) => {
+              if (res.success) {
+                Swal.fire('¡Ascendido!', `${nombre} ahora es superadmin.`, 'success');
+                this.cargarUsuarios();
+              }
+            },
+            error: () => Swal.fire('Error', 'No se pudo actualizar el usuario.', 'error')
+          });
+      }
+    });
+  }
+
+  degradarSuperAdmin(email: string, nombre: string) {
+    Swal.fire({
+      title: '¿Quitar Super Admin?',
+      text: `${nombre} pasará a ser admin normal.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#f39c12',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, quitar',
+      cancelButtonText: 'Cancelar'
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.http.post('http://localhost/backend/api/degradar_super_admin.php', { email }, { withCredentials: true })
+          .subscribe({
+            next: (res: any) => {
+              if (res.success) {
+                Swal.fire('¡Hecho!', `${nombre} ya no es superadmin.`, 'success');
+                this.cargarUsuarios();
+              }
+            },
+            error: () => Swal.fire('Error', 'No se pudo actualizar el usuario.', 'error')
+          });
+      }
+    });
+  }
+
   borrarUsuario(email: string, nombre: string) {
     Swal.fire({
       title: '¿Eliminar usuario?',
