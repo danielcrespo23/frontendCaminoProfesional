@@ -175,17 +175,20 @@ export class Home {
       cancelButtonText: 'Cancelar'
     }).then((result: any) => {
       if (result.isConfirmed) {
+        // Quitar de la lista local de forma inmediata
+        this.comentariosAdmin.update(lista => lista.filter(c => c.id !== id));
+
         this.http.delete(`http://localhost/backend/api/borrar_comentario.php?id=${id}`, { withCredentials: true })
           .subscribe({
             next: (respuesta: any) => {
               if (respuesta.success) {
                 Swal.fire('¡Borrado!', 'El comentario ha sido eliminado.', 'success');
-                this.cargarComentariosAdmin();
               }
             },
             error: (err) => {
               console.error('Error al borrar comentario:', err);
               Swal.fire('Error', 'Hubo un error al borrar el comentario.', 'error');
+              this.cargarComentariosAdmin(); // Restaurar si falló
             }
           });
       }

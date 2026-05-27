@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./comentarios.css']
 })
 export class Comentarios implements OnInit {
+  @Output() comentariosCambiaron = new EventEmitter<void>();
+
   comentarios: any[] = [];
   nuevoComentario: string = '';
   isLoggedIn: boolean = false;
@@ -59,15 +61,18 @@ export class Comentarios implements OnInit {
 
   borrarComentario(id: any): void {
     if (confirm('¿Estás seguro de que quieres borrar este comentario?')) {
+      // Quitar el comentario del array local de forma inmediata (sin esperar al servidor)
+      this.comentarios = this.comentarios.filter(c => c.id !== id);
+      this.comentariosCambiaron.emit(); // Avisar al panel admin
+
       this.http.delete(`${this.apiUrl}/borrar_comentario.php?id=${id}`, { withCredentials: true })
         .subscribe({
-          next: (respuesta: any) => {
-            console.log('Comentario borrado:', respuesta);
-            this.cargarComentarios();
-          },
+          next: () => { /* Lista ya actualizada localmente */ },
           error: (err) => {
             console.error('Error al borrar:', err);
             alert('Hubo un error al borrar el comentario.');
+            this.cargarComentarios(); // Si falla, restaurar la lista real del servidor
+            this.comentariosCambiaron.emit();
           }
         });
     }
@@ -88,6 +93,7 @@ export class Comentarios implements OnInit {
               fecha_creacion: new Date().toISOString()
             });
             this.nuevoComentario = '';
+            this.comentariosCambiaron.emit(); // Avisar al panel admin
           }
         },
         error: (err) => {
