@@ -10,11 +10,11 @@
       <p>Accede a formación profesional de calidad impartida por expertos del sector. Aprende a tu ritmo con contenido siempre actualizado.</p>
       <div class="hero-stats">
         <div class="hero-stat">
-          <strong>6</strong>
+          <strong>8</strong>
           <span>Cursos disponibles</span>
         </div>
         <div class="hero-stat">
-          <strong>+8.000</strong>
+          <strong>+24.000</strong>
           <span>Alumnos formados</span>
         </div>
         <div class="hero-stat">
@@ -43,6 +43,16 @@
           <i class="fas fa-wrench"></i> Herramientas
         </button>
       </div>
+
+      @if (auth.isAuthenticated()) {
+        <button class="carrito-btn" (click)="mostrarCarrito.set(true)">
+          <i class="fas fa-shopping-cart"></i>
+          @if (contadorCarrito() > 0) {
+            <span class="carrito-badge">{{ contadorCarrito() }}</span>
+          }
+          Carrito
+        </button>
+      }
     </div>
   </section>
 
@@ -73,22 +83,59 @@
             </div>
           </div>
           <div class="card-footer">
-            <div class="card-precio">
-              <span class="precio-desde">desde</span>
-              <span class="precio-valor">{{ curso.precio }}€</span>
-            </div>
-            <button class="btn-inscribirse" (click)="$event.stopPropagation(); inscribirse(curso)">
-              @if (auth.isAuthenticated()) {
-                <i class="fas fa-shopping-cart"></i> Inscribirte
-              } @else {
-                <i class="fas fa-lock"></i> Inscribirte
-              }
-            </button>
+            @if (yaComprado(curso.id)) {
+              <button class="btn-descarga" (click)="$event.stopPropagation(); descargarPdf(curso.id)">
+                <i class="fas fa-file-pdf"></i> Descargar
+              </button>
+            } @else if (estaEnCarrito(curso.id)) {
+              <button class="btn-en-carrito" disabled (click)="$event.stopPropagation()">
+                <i class="fas fa-check"></i> En el carrito
+              </button>
+            } @else {
+              <button class="btn-inscribirse" (click)="$event.stopPropagation(); agregarAlCarrito(curso)">
+                @if (auth.isAuthenticated()) {
+                  <i class="fas fa-shopping-cart"></i> Añadir
+                } @else {
+                  <i class="fas fa-lock"></i> Inscribirte
+                }
+              </button>
+            }
           </div>
         </div>
       }
     </div>
   </section>
+
+  <!-- MIS CURSOS -->
+  @if (auth.isAuthenticated() && cursosCompradosList().length > 0) {
+    <section class="mis-cursos-section">
+      <div class="mis-cursos-container">
+        <div class="mis-cursos-titulo">
+          <i class="fas fa-book-open"></i>
+          <div>
+            <h2>Mis cursos</h2>
+            <p>Material adquirido — descárgalo cuando quieras</p>
+          </div>
+        </div>
+        <div class="mis-cursos-grid">
+          @for (curso of cursosCompradosList(); track curso.id) {
+            <div class="mis-curso-card">
+              <div class="mis-curso-header" [style.background]="curso.colorHeader">
+                <i class="fas" [class]="curso.icono"></i>
+              </div>
+              <div class="mis-curso-body">
+                <span class="mis-curso-nivel" [class]="'nivel-' + curso.nivel.toLowerCase()">{{ curso.nivel }}</span>
+                <h4>{{ curso.titulo }}</h4>
+              </div>
+              <button class="btn-descargar-pdf" (click)="descargarPdf(curso.id)">
+                <i class="fas fa-file-pdf"></i> Descargar PDF
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
 
   <!-- BANNER: solo para usuarios no logueados -->
   @if (!auth.isAuthenticated()) {
@@ -154,18 +201,70 @@
         </div>
       </div>
       <div class="modal-footer">
-        <div class="modal-precio">
-          <span>{{ curso.precio }}€</span>
-          <small>Acceso de por vida · Certificado incluido</small>
+        @if (yaComprado(curso.id)) {
+          <button class="btn-modal-descarga" (click)="descargarPdf(curso.id)">
+            <i class="fas fa-file-pdf"></i> Descargar PDF
+          </button>
+        } @else if (estaEnCarrito(curso.id)) {
+          <button class="btn-modal-en-carrito" disabled>
+            <i class="fas fa-check"></i> Ya en el carrito
+          </button>
+        } @else {
+          <button class="btn-modal-inscribir" (click)="agregarAlCarrito(curso, true)">
+            @if (auth.isAuthenticated()) {
+              <i class="fas fa-shopping-cart"></i> Añadir al carrito
+            } @else {
+              <i class="fas fa-lock"></i> Inicia sesión para comprar
+            }
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- CARRITO PANEL -->
+@if (mostrarCarrito()) {
+  <div class="carrito-overlay" (click)="mostrarCarrito.set(false)"></div>
+  <div class="carrito-panel">
+    <div class="carrito-panel-header">
+      <h3><i class="fas fa-shopping-cart"></i> Mi carrito</h3>
+      <button class="carrito-cerrar" (click)="mostrarCarrito.set(false)">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="carrito-panel-body">
+      @if (contadorCarrito() === 0) {
+        <div class="carrito-vacio">
+          <i class="fas fa-cart-shopping"></i>
+          <p>Tu carrito está vacío</p>
+          <small>Añade cursos para continuar</small>
         </div>
-        <button class="btn-modal-inscribir" (click)="inscribirse(curso)">
-          @if (auth.isAuthenticated()) {
-            <i class="fas fa-shopping-cart"></i> Inscribirte ahora
+      } @else {
+        <div class="carrito-items">
+          @for (item of carrito(); track item.id) {
+            <div class="carrito-item">
+              <div class="carrito-item-icono" [style.background]="item.colorHeader">
+                <i class="fas" [class]="item.icono"></i>
+              </div>
+              <div class="carrito-item-info">
+                <span class="carrito-item-titulo">{{ item.titulo }}</span>
+              </div>
+              <button class="carrito-item-quitar" (click)="quitarDelCarrito(item.id)" title="Quitar">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          }
+        </div>
+        <button class="btn-confirmar-compra" (click)="confirmarCompra()" [disabled]="comprando()">
+          @if (comprando()) {
+            <i class="fas fa-spinner fa-spin"></i> Procesando...
           } @else {
-            <i class="fas fa-lock"></i> Inicia sesión para inscribirte
+            <i class="fas fa-check-circle"></i> Confirmar compra
           }
         </button>
-      </div>
+        <p class="carrito-nota"><i class="fas fa-shield-alt"></i> Acceso de por vida · PDF descargable</p>
+      }
     </div>
   </div>
 }

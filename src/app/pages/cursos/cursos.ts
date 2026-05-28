@@ -1,9 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Header } from '../../components/header/header';
 import { Footer } from '../../components/footer/footer';
 import { Auth } from '../../services/auth';
+import Swal from 'sweetalert2';
 
 interface Curso {
   id: number;
@@ -30,9 +32,18 @@ interface Curso {
 export class Cursos {
   auth = inject(Auth);
   private router = inject(Router);
+  private http = inject(HttpClient);
 
   filtroActivo = signal<'todos' | 'lenguaje' | 'apuntes' | 'herramientas'>('todos');
   cursoSeleccionado = signal<Curso | null>(null);
+  carrito = signal<Curso[]>([]);
+  cursosComprados = signal<number[]>([]);
+  mostrarCarrito = signal(false);
+  comprando = signal(false);
+
+  cursosCompradosList = computed(() => this.cursos.filter(c => this.cursosComprados().includes(c.id)));
+  totalCarrito = computed(() => this.carrito().reduce((s, c) => s + c.precio, 0));
+  contadorCarrito = computed(() => this.carrito().length);
 
   cursos: Curso[] = [
     {
@@ -149,6 +160,82 @@ export class Cursos {
     }
   ];
 
+  constructor() {
+    effect(() => {
+      if (this.auth.isAuthenticated()) {
+        this.cargarCursosComprados();
+      } else {
+        this.cursosComprados.set([]);
+        this.carrito.set([]);
+      }
+    });
+  }
+
+  cargarCursosComprados() {
+    this.http.get<any>('http://localhost/backend/api/get_mis_cursos.php', { withCredentials: true })
+      .subscribe({
+        next: (res) => { if (res.success) this.cursosComprados.set(res.data); },
+        error: () => {}
+      });
+  }
+
+  yaComprado(id: number): boolean {
+    return this.cursosComprados().includes(id);
+  }
+
+  estaEnCarrito(id: number): boolean {
+    return this.carrito().some(c => c.id === id);
+  }
+
+  agregarAlCarrito(curso: Curso, desdeModal = false) {
+    if (!this.auth.isAuthenticated()) {
+      if (desdeModal) this.cerrarDetalle();
+      this.router.navigate(['/login']);
+      return;
+    }
+    if (this.yaComprado(curso.id) || this.estaEnCarrito(curso.id)) return;
+    this.carrito.update(c => [...c, curso]);
+    if (desdeModal) this.cerrarDetalle();
+    this.mostrarCarrito.set(true);
+  }
+
+  quitarDelCarrito(id: number) {
+    this.carrito.update(c => c.filter(x => x.id !== id));
+  }
+
+  confirmarCompra() {
+    if (!this.carrito().length || this.comprando()) return;
+    this.comprando.set(true);
+    const ids = this.carrito().map(c => c.id);
+    this.http.post<any>('http://localhost/backend/api/comprar_cursos.php', { curso_ids: ids }, { withCredentials: true })
+      .subscribe({
+        next: (res) => {
+          this.comprando.set(false);
+          if (res.success) {
+            this.cursosComprados.update(prev => [...new Set([...prev, ...ids])]);
+            this.carrito.set([]);
+            this.mostrarCarrito.set(false);
+            Swal.fire({
+              title: '¡Compra realizada!',
+              text: 'Ya puedes descargar tus cursos desde la sección "Mis cursos".',
+              icon: 'success',
+              confirmButtonColor: '#004374'
+            });
+          } else {
+            Swal.fire('Error', res.message || 'No se pudo completar la compra.', 'error');
+          }
+        },
+        error: () => {
+          this.comprando.set(false);
+          Swal.fire('Error', 'No se pudo completar la compra.', 'error');
+        }
+      });
+  }
+
+  descargarPdf(cursoId: number) {
+    window.open(`http://localhost/backend/api/get_pdf.php?curso_id=${cursoId}`, '_blank');
+  }
+
   get cursosFiltrados(): Curso[] {
     const filtro = this.filtroActivo();
     if (filtro === 'todos') return this.cursos;
@@ -165,16 +252,6 @@ export class Cursos {
 
   cerrarDetalle() {
     this.cursoSeleccionado.set(null);
-  }
-
-  inscribirse(curso: Curso) {
-    if (!this.auth.isAuthenticated()) {
-      this.cerrarDetalle();
-      this.router.navigate(['/login']);
-      return;
-    }
-    // TODO: llamada al backend cuando esté disponible
-    alert(`Inscripción en "${curso.titulo}" próximamente disponible.`);
   }
 
   estrellas(valoracion: number): number[] {

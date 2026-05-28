@@ -45,6 +45,22 @@ export class Home {
   };
 
   comentariosAdmin = signal<any[]>([]);
+  comprasAdmin = signal<any[]>([]);
+
+  private nombresCursos: Record<number, string> = {
+    1: 'Python desde cero',
+    2: 'JavaScript moderno (ES6+)',
+    3: 'Java para principiantes',
+    4: 'Apuntes: Bases de Datos',
+    5: 'Apuntes: Programación en C',
+    6: 'Git & GitHub completo',
+    7: 'Docker desde cero',
+    8: 'Linux para desarrolladores'
+  };
+
+  nombreCurso(id: number): string {
+    return this.nombresCursos[id] ?? `Curso #${id}`;
+  }
 
   constructor() {
     effect(() => {
@@ -52,6 +68,7 @@ export class Home {
         this.cargarUsuarios();
         this.cargarSolicitudes();
         this.cargarComentariosAdmin();
+        this.cargarComprasAdmin();
       }
     });
   }
@@ -306,6 +323,14 @@ export class Home {
           });
       }
     });
+  }
+
+  cargarComprasAdmin() {
+    this.http.get<any>('http://localhost/backend/api/get_compras_admin.php', { withCredentials: true })
+      .subscribe({
+        next: (res) => { if (res.success) this.comprasAdmin.set(res.data); },
+        error: (err) => console.error('Error cargando compras:', err)
+      });
   }
 
   borrarSolicitud(id: any, nombre: string) {
