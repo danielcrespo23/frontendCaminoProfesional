@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+﻿import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, of, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -31,7 +31,7 @@ interface SessionResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost/backend/api'; // ← CAMBIA ESTO a tu URL
+  private apiUrl = '/backend/api'; // â† CAMBIA ESTO a tu URL
 
   // Signals para reactividad
   usuario = signal<Usuario | null>(null);
@@ -49,7 +49,7 @@ export class AuthService {
     this.checkSession();
   }
 
-  // Verificar sesión al iniciar la app
+  // Verificar sesiÃ³n al iniciar la app
   checkSession(): void {
     this.http.get<SessionResponse>(`${this.apiUrl}/check-session.php`, { withCredentials: true })
       .pipe(
@@ -80,7 +80,7 @@ export class AuthService {
         console.error('Error en login:', error);
         return of({ 
           success: false, 
-          message: error.error?.message || 'Error al iniciar sesión' 
+          message: error.error?.message || 'Error al iniciar sesiÃ³n' 
         });
       })
     );

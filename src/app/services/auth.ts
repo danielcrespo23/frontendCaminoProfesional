@@ -33,7 +33,7 @@ interface SessionResponse {
 
 @Injectable({ providedIn: 'root' })
 export class Auth {
-  private apiUrl = 'http://localhost/backend/api';
+  private apiUrl = '/backend/api';
   // ← Aquí apunta al backend
 
   // Signals para reactividad

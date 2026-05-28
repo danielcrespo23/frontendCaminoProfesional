@@ -25,7 +25,7 @@ export class Comentarios implements OnInit {
   activeReplyId: number | null = null;
   nuevaRespuesta: string = '';
 
-  private apiUrl = 'http://localhost/backend/api';
+  private apiUrl = '/backend/api';
 
   constructor(private http: HttpClient, private router: Router) {}
 

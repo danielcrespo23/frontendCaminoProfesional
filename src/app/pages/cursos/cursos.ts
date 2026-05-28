@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+﻿import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,7 @@ interface Curso {
   descripcion: string;
   precio: number;
   duracion: string;
-  nivel: 'Básico' | 'Intermedio' | 'Avanzado';
+  nivel: 'BÃ¡sico' | 'Intermedio' | 'Avanzado';
   categoria: 'lenguaje' | 'apuntes' | 'herramientas';
   icono: string;
   colorHeader: string;
@@ -49,16 +49,16 @@ export class Cursos {
     {
       id: 1,
       titulo: 'Python desde cero',
-      descripcion: 'Aprende Python de forma práctica: desde variables y bucles hasta proyectos reales con manejo de ficheros, APIs y librerías populares.',
+      descripcion: 'Aprende Python de forma prÃ¡ctica: desde variables y bucles hasta proyectos reales con manejo de ficheros, APIs y librerÃ­as populares.',
       precio: 29,
       duracion: '40h',
-      nivel: 'Básico',
+      nivel: 'BÃ¡sico',
       categoria: 'lenguaje',
       icono: 'fa-snake',
       colorHeader: 'linear-gradient(135deg, #3572A5 0%, #1e4d7b 100%)',
       valoracion: 4.9,
       alumnos: 3420,
-      temario: ['Variables y tipos de datos', 'Condicionales y bucles', 'Funciones y módulos', 'Ficheros y excepciones', 'Introducción a librerías (requests, json)']
+      temario: ['Variables y tipos de datos', 'Condicionales y bucles', 'Funciones y mÃ³dulos', 'Ficheros y excepciones', 'IntroducciÃ³n a librerÃ­as (requests, json)']
     },
     {
       id: 2,
@@ -72,68 +72,68 @@ export class Cursos {
       colorHeader: 'linear-gradient(135deg, #f0db4f 0%, #c8a800 100%)',
       valoracion: 4.8,
       alumnos: 2870,
-      temario: ['Scope, let y const', 'Arrow functions y closures', 'Promesas y async/await', 'Módulos ES6', 'DOM y eventos']
+      temario: ['Scope, let y const', 'Arrow functions y closures', 'Promesas y async/await', 'MÃ³dulos ES6', 'DOM y eventos']
     },
     {
       id: 3,
       titulo: 'Java para principiantes',
-      descripcion: 'Entiende la programación orientada a objetos con Java: clases, herencia, interfaces y colecciones con ejemplos paso a paso.',
+      descripcion: 'Entiende la programaciÃ³n orientada a objetos con Java: clases, herencia, interfaces y colecciones con ejemplos paso a paso.',
       precio: 24,
       duracion: '45h',
-      nivel: 'Básico',
+      nivel: 'BÃ¡sico',
       categoria: 'lenguaje',
       icono: 'fa-mug-hot',
       colorHeader: 'linear-gradient(135deg, #e76f00 0%, #b85500 100%)',
       valoracion: 4.6,
       alumnos: 1950,
-      temario: ['Clases y objetos', 'Herencia e interfaces', 'Colecciones (List, Map, Set)', 'Gestión de excepciones', 'Entrada / salida de datos']
+      temario: ['Clases y objetos', 'Herencia e interfaces', 'Colecciones (List, Map, Set)', 'GestiÃ³n de excepciones', 'Entrada / salida de datos']
     },
     {
       id: 4,
       titulo: 'Apuntes: Bases de Datos',
-      descripcion: 'Pack completo de apuntes sobre diseño relacional, SQL desde cero, normalización, procedimientos almacenados y transacciones.',
+      descripcion: 'Pack completo de apuntes sobre diseÃ±o relacional, SQL desde cero, normalizaciÃ³n, procedimientos almacenados y transacciones.',
       precio: 9,
-      duracion: '—',
-      nivel: 'Básico',
+      duracion: 'â€”',
+      nivel: 'BÃ¡sico',
       categoria: 'apuntes',
       icono: 'fa-database',
       colorHeader: 'linear-gradient(135deg, #004374 0%, #002b49 100%)',
       valoracion: 4.7,
       alumnos: 5100,
-      temario: ['Modelo entidad-relación', 'SQL: SELECT, JOIN, GROUP BY', 'Normalización (1FN–3FN)', 'Procedimientos y funciones', 'Transacciones y control de concurrencia']
+      temario: ['Modelo entidad-relaciÃ³n', 'SQL: SELECT, JOIN, GROUP BY', 'NormalizaciÃ³n (1FNâ€“3FN)', 'Procedimientos y funciones', 'Transacciones y control de concurrencia']
     },
     {
       id: 5,
-      titulo: 'Apuntes: Programación en C',
-      descripcion: 'Resúmenes y ejercicios resueltos de C: punteros, gestión de memoria, structs y manejo de ficheros explicados con claridad.',
+      titulo: 'Apuntes: ProgramaciÃ³n en C',
+      descripcion: 'ResÃºmenes y ejercicios resueltos de C: punteros, gestiÃ³n de memoria, structs y manejo de ficheros explicados con claridad.',
       precio: 7,
-      duracion: '—',
+      duracion: 'â€”',
       nivel: 'Intermedio',
       categoria: 'apuntes',
       icono: 'fa-file-code',
       colorHeader: 'linear-gradient(135deg, #555555 0%, #222222 100%)',
       valoracion: 4.5,
       alumnos: 2340,
-      temario: ['Tipos de datos y operadores', 'Punteros y aritmética de punteros', 'Arrays y strings', 'Structs y uniones', 'Gestión de memoria dinámica']
+      temario: ['Tipos de datos y operadores', 'Punteros y aritmÃ©tica de punteros', 'Arrays y strings', 'Structs y uniones', 'GestiÃ³n de memoria dinÃ¡mica']
     },
     {
       id: 6,
       titulo: 'Git & GitHub completo',
-      descripcion: 'Controla el historial de tu código: ramas, merges, pull requests, resolución de conflictos y flujos de trabajo en equipo.',
+      descripcion: 'Controla el historial de tu cÃ³digo: ramas, merges, pull requests, resoluciÃ³n de conflictos y flujos de trabajo en equipo.',
       precio: 14,
       duracion: '12h',
-      nivel: 'Básico',
+      nivel: 'BÃ¡sico',
       categoria: 'herramientas',
       icono: 'fa-code-branch',
       colorHeader: 'linear-gradient(135deg, #f05033 0%, #b93520 100%)',
       valoracion: 4.9,
       alumnos: 4680,
-      temario: ['Repositorios locales y remotos', 'Ramas y merges', 'Pull requests y code review', 'Resolución de conflictos', 'GitHub Actions (intro)']
+      temario: ['Repositorios locales y remotos', 'Ramas y merges', 'Pull requests y code review', 'ResoluciÃ³n de conflictos', 'GitHub Actions (intro)']
     },
     {
       id: 7,
       titulo: 'Docker desde cero',
-      descripcion: 'Aprende a contenedorizar aplicaciones con Docker: imágenes, contenedores, volúmenes, redes y Docker Compose para entornos reales.',
+      descripcion: 'Aprende a contenedorizar aplicaciones con Docker: imÃ¡genes, contenedores, volÃºmenes, redes y Docker Compose para entornos reales.',
       precio: 19,
       duracion: '18h',
       nivel: 'Intermedio',
@@ -142,21 +142,21 @@ export class Cursos {
       colorHeader: 'linear-gradient(135deg, #0db7ed 0%, #0880a8 100%)',
       valoracion: 4.8,
       alumnos: 1760,
-      temario: ['Qué es un contenedor', 'Dockerfile y construcción de imágenes', 'Volúmenes y redes', 'Docker Compose', 'Despliegue de una app real']
+      temario: ['QuÃ© es un contenedor', 'Dockerfile y construcciÃ³n de imÃ¡genes', 'VolÃºmenes y redes', 'Docker Compose', 'Despliegue de una app real']
     },
     {
       id: 8,
       titulo: 'Linux para desarrolladores',
-      descripcion: 'Domina la terminal de Linux: comandos esenciales, permisos, scripting con Bash, procesos y administración básica del sistema.',
+      descripcion: 'Domina la terminal de Linux: comandos esenciales, permisos, scripting con Bash, procesos y administraciÃ³n bÃ¡sica del sistema.',
       precio: 14,
       duracion: '15h',
-      nivel: 'Básico',
+      nivel: 'BÃ¡sico',
       categoria: 'herramientas',
       icono: 'fa-terminal',
       colorHeader: 'linear-gradient(135deg, #333333 0%, #1a1a1a 100%)',
       valoracion: 4.7,
       alumnos: 2190,
-      temario: ['Navegación y gestión de ficheros', 'Permisos y usuarios', 'Redirección y pipes', 'Scripting con Bash', 'Gestión de procesos y servicios']
+      temario: ['NavegaciÃ³n y gestiÃ³n de ficheros', 'Permisos y usuarios', 'RedirecciÃ³n y pipes', 'Scripting con Bash', 'GestiÃ³n de procesos y servicios']
     }
   ];
 
@@ -172,7 +172,7 @@ export class Cursos {
   }
 
   cargarCursosComprados() {
-    this.http.get<any>('http://localhost/backend/api/get_mis_cursos.php', { withCredentials: true })
+    this.http.get<any>('/backend/api/get_mis_cursos.php', { withCredentials: true })
       .subscribe({
         next: (res) => { if (res.success) this.cursosComprados.set(res.data); },
         error: () => {}
@@ -207,7 +207,7 @@ export class Cursos {
     if (!this.carrito().length || this.comprando()) return;
     this.comprando.set(true);
     const ids = this.carrito().map(c => c.id);
-    this.http.post<any>('http://localhost/backend/api/comprar_cursos.php', { curso_ids: ids }, { withCredentials: true })
+    this.http.post<any>('/backend/api/comprar_cursos.php', { curso_ids: ids }, { withCredentials: true })
       .subscribe({
         next: (res) => {
           this.comprando.set(false);
@@ -216,8 +216,8 @@ export class Cursos {
             this.carrito.set([]);
             this.mostrarCarrito.set(false);
             Swal.fire({
-              title: '¡Compra realizada!',
-              text: 'Ya puedes descargar tus cursos desde la sección "Mis cursos".',
+              title: 'Â¡Compra realizada!',
+              text: 'Ya puedes descargar tus cursos desde la secciÃ³n "Mis cursos".',
               icon: 'success',
               confirmButtonColor: '#004374'
             });
@@ -233,7 +233,7 @@ export class Cursos {
   }
 
   descargarPdf(cursoId: number) {
-    window.open(`http://localhost/backend/api/get_pdf.php?curso_id=${cursoId}`, '_blank');
+    window.open(`/backend/api/get_pdf.php?curso_id=${cursoId}`, '_blank');
   }
 
   get cursosFiltrados(): Curso[] {
@@ -258,3 +258,4 @@ export class Cursos {
     return Array(Math.round(valoracion)).fill(0);
   }
 }
+
